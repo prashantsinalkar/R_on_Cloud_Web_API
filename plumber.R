@@ -25,10 +25,11 @@ function()
 
 #* @serializer unboxedJSON
 #* @post /rscript
-function(code="", user_id="")
+function(code="", session_id="")
 {
-    InputFile <- paste("/tmp/",user_id,"/",user_id,".R", sep="")
-    OutputFile <- paste("/tmp/",user_id,"/",user_id,".txt", sep="")
+    dir.create(file.path("/tmp/", session_id), showWarnings = FALSE)
+    InputFile <- paste("/tmp/",session_id,"/",session_id,".R", sep="")
+    OutputFile <- paste("/tmp/",session_id,"/",session_id,".txt", sep="")
     RunInputFile <- paste("Rscript", InputFile, sep=" ")
     fileConn<-file(InputFile)
     writeLines(code, fileConn)
