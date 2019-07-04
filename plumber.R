@@ -34,12 +34,27 @@ function(code="", session_id="")
     fileConn<-file(InputFile)
     writeLines(code, fileConn)
     close(fileConn)
-    ro <- system(RunInputFile, intern = TRUE)
+    #ro <- system(RunInputFile, intern = TRUE)
+    ro <-robust.system(RunInputFile)
+    ro <- unlist(lapply(ro,function(x) if(identical(x,character(0))) ' ' else x))
     fileConn<-file(OutputFile)
-    writeLines(ro, fileConn)
+    writeLines(paste0(ro), fileConn)
     close(fileConn)
     ro <- read_file(OutputFile)
     r<- list(status = "SUCCESS", code = "200", output = ro)
     return (r)
 }
 
+
+robust.system <- function (cmd) {
+    stderrFile = tempfile(pattern="R_robust.system_stderr", fileext=as.character(Sys.getpid()))
+    stdoutFile = tempfile(pattern="R_robust.system_stdout", fileext=as.character(Sys.getpid()))
+
+    retval = list()
+    retval$exitStatus = system(paste0(cmd, " 2> ", shQuote(stderrFile), " > ", shQuote(stdoutFile)), intern = TRUE )
+    retval$stdout = readLines(stdoutFile)
+    retval$stderr = readLines(stderrFile)
+
+    unlink(c(stdoutFile, stderrFile))
+    return(retval)
+}
