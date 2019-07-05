@@ -32,7 +32,10 @@ function(code="", session_id="")
     OutputFile <- paste("/tmp/",session_id,"/",session_id,".txt", sep="")
     RunInputFile <- paste("Rscript", InputFile, sep=" ")
     fileConn<-file(InputFile)
-    writeLines(code, fileConn)
+    Line1 = paste("png('/tmp/",session_id,".png')\n", sep="")
+    Line2 = code
+    Line3 = "while (!is.null(dev.list()))  dev.off()"
+    writeLines(c(Line1, Line2, Line3), fileConn)
     close(fileConn)
     #ro <- system(RunInputFile, intern = TRUE)
     ro <-robust.system(RunInputFile)
