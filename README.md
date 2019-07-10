@@ -12,6 +12,7 @@ R version 3.4.4
     install.packages("readr")
     install.packages("futile.logger")
     install.packages("tryCatchLog")
+    install.packages("ggplot2")
     ------------------------------------------
     > library(plumber)
     > r <- plumb("plumber.R")  # Where 'plumber.R' is the location of the file shown above
