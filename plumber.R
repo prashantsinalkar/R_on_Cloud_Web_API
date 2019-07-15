@@ -5,7 +5,6 @@ library(readr)
 library(futile.logger)
 library(tryCatchLog)
 library(ggplot2)
-
 # creare R directory
 dir.create(file.path("/tmp/R"), showWarnings = FALSE)
 
@@ -23,6 +22,7 @@ function(code="", session_id="", R_file_id="")
 {
     # create session directory for user
     dir.create(file.path("/tmp/R/", session_id), showWarnings = FALSE)
+    setwd(file.path("/tmp/R/", session_id))
     InputFile <- paste("/tmp/R/",session_id,"/", R_file_id,".R", sep="")
     OutputFile <- paste("/tmp/R/",session_id,"/", R_file_id,".txt", sep="")
     RunInputFile <- paste("Rscript", InputFile, sep=" ")
@@ -73,12 +73,14 @@ robust.system <- function (cmd) {
 #* @post /upload
 upload <- function(req, res){
   cat("---- New Request ----\n")
+  session_id <- gsub('\"', "", substr(req$postBody[length(req$postBody)-1], 1, 1000))
+  dir.create(file.path("/tmp/R/", session_id), showWarnings = FALSE)
   # the path where you want to write the uploaded files
-  file_path <- "/data/home/r_on_cloud/R_on_Cloud_Web_API/"
+  file_path <- paste("/tmp/R/",session_id,"/", sep="")
   # strip the filename out of the postBody
   file_name <- gsub('\"', "", substr(req$postBody[2], 55, 1000))
   # need the length of the postBody so we know how much to write out
-  file_length <- length(req$postBody)-1
+  file_length <- length(req$postBody)-5
   # first five lines of the post body contain metadata so are ignored
   file_content <- req$postBody[5:file_length]
   # build the path of the file to write
