@@ -12,15 +12,17 @@ Run following Steps :
 
 **Run on local R console:**
 R version 3.4.4
-
+ 
   **Requirements preinstalled R packages:**
-    install.packages("plumber")
-    install.packages("jsonlite")
-    install.packages("readr")
-    install.packages("futile.logger")
-    install.packages("tryCatchLog")
-    install.packages("ggplot2")
-    ------------------------------------------
+  
+    1) install.packages("plumber") 
+    2) install.packages("jsonlite") 
+    3) install.packages("readr") 
+    4) install.packages("futile.logger") 
+    5) install.packages("tryCatchLog")
+    6) install.packages("ggplot2") 
+**----------------------------------------------------------------------------**
+    
     #run.R
     > library(plumber)
     > r <- plumb("plumber.R")  # Where 'plumber.R' is the location of the file shown above
