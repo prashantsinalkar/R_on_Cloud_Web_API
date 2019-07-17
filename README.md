@@ -6,8 +6,10 @@ Run following Steps :
 2) $ chmod +X packageinstall.sh
 3) $ ./packageinstall.sh
 4) $ Rscript run.R
-5) Check in browser http://127.0.0.1:8000/\_\_swagger_\_\/ 
+5) Check in browser http://127.0.0.1:8001/__swagger__/
+
 **----------------------------------------------------------------------------**
+
 **Run on local R console:**
 R version 3.4.4
 
