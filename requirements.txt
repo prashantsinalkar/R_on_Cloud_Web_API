@@ -1,0 +1,6 @@
+plumber
+jsonlite
+readr
+futile.logger
+tryCatchLog
+ggplot2
