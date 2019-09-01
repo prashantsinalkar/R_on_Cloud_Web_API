@@ -3,4 +3,6 @@ jsonlite
 readr
 futile.logger
 tryCatchLog
+tidyverse
 ggplot2
+yaml

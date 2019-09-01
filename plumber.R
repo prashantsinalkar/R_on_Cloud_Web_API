@@ -5,8 +5,11 @@ library(readr)
 library(futile.logger)
 library(tryCatchLog)
 library(ggplot2)
+library(yaml)
+
+config = yaml.load_file("config.yml")
 # creare R directory
-dir.create(file.path("/tmp/R"), showWarnings = FALSE)
+dir.create(file.path(config$dir$temp_dir), showWarnings = FALSE)
 
 #* Echo back the input
 #* @param msg The message to echo
@@ -21,13 +24,13 @@ function(msg="")
 function(code="", session_id="", R_file_id="")
 {
     # create session directory for user
-    dir.create(file.path("/tmp/R/", session_id), showWarnings = FALSE)
-    setwd(file.path("/tmp/R/", session_id))
-    InputFile <- paste("/tmp/R/",session_id,"/", R_file_id,".R", sep="")
-    OutputFile <- paste("/tmp/R/",session_id,"/", R_file_id,".txt", sep="")
+    dir.create(file.path(config$dir$temp_dir, session_id), showWarnings = FALSE)
+    setwd(file.path(config$dir$temp_dir, session_id))
+    InputFile <- paste(config$dir$temp_dir,session_id,"/", R_file_id,".R", sep="")
+    OutputFile <- paste(config$dir$temp_dir,session_id,"/", R_file_id,".txt", sep="")
     RunInputFile <- paste("Rscript", InputFile, sep=" ")
     fileConn<-file(InputFile)
-    Line1 = paste("png('/tmp/R/",session_id,"/", R_file_id,".png')\n", sep="")
+    Line1 = paste("png('",config$dir$temp_dir,session_id,"/", R_file_id,".png')\n", sep="")
     Line2 = code
     Line3 = "while (!is.null(dev.list()))  dev.off()"
     writeLines(c(Line1, Line2, Line3), fileConn)
@@ -39,7 +42,7 @@ function(code="", session_id="", R_file_id="")
     writeLines(paste0(ro), fileConn)
     close(fileConn)
     ro <- read_file(OutputFile)
-    if (file.exists(paste("/tmp/R/",session_id,"/",R_file_id,".png", sep="")) == TRUE) {
+    if (file.exists(paste(config$dir$temp_dir,session_id,"/",R_file_id,".png", sep="")) == TRUE) {
         graph_exist <- TRUE
     } else {
         graph_exist <- FALSE
@@ -51,7 +54,7 @@ function(code="", session_id="", R_file_id="")
 #* @serializer contentType list(type='image/png')
 #* @get /file
 function(req, res, session_id="", R_file_id=""){
-  file = paste("/tmp/R/",session_id,"/",R_file_id,".png", sep="")
+  file = paste(config$dir$temp_dir,session_id,"/",R_file_id,".png", sep="")
   readBin(file,'raw',n = file.info(file)$size)
 }
 
@@ -74,9 +77,9 @@ robust.system <- function (cmd) {
 upload <- function(req, res){
   cat("---- New Request ----\n")
   session_id <- gsub('\"', "", substr(req$postBody[length(req$postBody)-1], 1, 1000))
-  dir.create(file.path("/tmp/R/", session_id), showWarnings = FALSE)
+  dir.create(file.path(config$dir$temp_dir, session_id), showWarnings = FALSE)
   # the path where you want to write the uploaded files
-  file_path <- paste("/tmp/R/",session_id,"/", sep="")
+  file_path <- paste(config$dir$temp_dir,session_id,"/", sep="")
   # strip the filename out of the postBody
   file_name <- gsub('\"', "", substr(req$postBody[2], 55, 1000))
   # need the length of the postBody so we know how much to write out

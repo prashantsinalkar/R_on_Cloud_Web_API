@@ -1,0 +1,5 @@
+dir:
+ temp_dir : /tmp/R/ # temperory directory path
+host:
+ host_ip: 0.0.0.0 # host ip address
+ host_port: 8001 # host port
